@@ -12,8 +12,10 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Settings\Abstract\" />
-    <Folder Include="Settings\Concrete\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\FreeCourse.Shared\FreeCourse.Shared.csproj" />
   </ItemGroup>
 
 </Project>

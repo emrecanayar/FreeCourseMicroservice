@@ -1,3 +1,7 @@
+using FreeCourse.Services.Catalog.Application;
+using FreeCourse.Services.Catalog.Application.Category;
+using FreeCourse.Services.Catalog.Settings.Abstract;
+using FreeCourse.Services.Catalog.Settings.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -33,6 +38,12 @@ namespace FreeCourse.Services.Catalog
             });
 
             services.AddAutoMapper(typeof(Startup));
+            services.Configure<DatabaseSettings>(Configuration.GetSection("DatabaseSettings"));
+            services.AddSingleton<IDatabaseSettings>(serviceProvider =>
+            {
+                return serviceProvider.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+            });
+            services.AddTransient<ICategoryAppService, CategoryAppService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
