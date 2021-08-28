@@ -12,6 +12,7 @@ namespace FreeCourse.Services.Catalog.Application.Category
         Task<IDataResult<IList<CategoryDto>>> GetAllAsync();
         Task<IDataResult<CategoryDto>> CreateAsync(CategoryCreateDto categoryDto);
         Task<IDataResult<CategoryDto>> GetByIdAsync(string id);
+        Task<IResult> DeleteAsync(string id);
 
     }
 }

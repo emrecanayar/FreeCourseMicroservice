@@ -32,9 +32,9 @@ namespace FreeCourse.Services.Catalog.Application
             var categories = await _categoryCollection.Find(category => true).ToListAsync();
             if (categories != null)
             {
-                return new DataResult<IList<CategoryDto>>(resultStatus: ResultStatus.Success, data: _mapper.Map<List<CategoryDto>>(categories));
+                return new DataResult<IList<CategoryDto>>(resultStatus: ResultStatus.Success, data: _mapper.Map<List<CategoryDto>>(categories), statusCode: 200);
             }
-            return new DataResult<IList<CategoryDto>>(resultStatus: ResultStatus.Error, data: null, message: Messages.Category.NotFound(true));
+            return new DataResult<IList<CategoryDto>>(resultStatus: ResultStatus.Error, data: null, message: Messages.Category.NotFound(true), statusCode: 404);
         }
 
         public async Task<IDataResult<CategoryDto>> CreateAsync(CategoryCreateDto categoryDto)
@@ -43,9 +43,9 @@ namespace FreeCourse.Services.Catalog.Application
             if (category != null)
             {
                 await _categoryCollection.InsertOneAsync(category);
-                return new DataResult<CategoryDto>(resultStatus: ResultStatus.Success, data: _mapper.Map<CategoryDto>(category));
+                return new DataResult<CategoryDto>(resultStatus: ResultStatus.Success, data: _mapper.Map<CategoryDto>(category), statusCode: 200);
             }
-            return new DataResult<CategoryDto>(resultStatus: ResultStatus.Error, data: null);
+            return new DataResult<CategoryDto>(resultStatus: ResultStatus.Error, data: null, statusCode: 404);
 
         }
 
@@ -54,9 +54,20 @@ namespace FreeCourse.Services.Catalog.Application
             var category = await _categoryCollection.Find<FreeCourse.Services.Catalog.Entities.Category>(x => x.Id == id).FirstOrDefaultAsync();
             if (category != null)
             {
-                return new DataResult<CategoryDto>(resultStatus: ResultStatus.Success, data: _mapper.Map<CategoryDto>(category));
+                return new DataResult<CategoryDto>(resultStatus: ResultStatus.Success, data: _mapper.Map<CategoryDto>(category), statusCode: 200);
             }
-            return new DataResult<CategoryDto>(resultStatus: ResultStatus.Error, data: null, message: Messages.Category.NotFound(false));
+            return new DataResult<CategoryDto>(resultStatus: ResultStatus.Error, data: null, message: Messages.Category.NotFound(false), statusCode: 404);
+        }
+
+        public async Task<IResult> DeleteAsync(string id)
+        {
+            var result = await _categoryCollection.DeleteOneAsync(x => x.Id == id);
+            if (result.DeletedCount > 0)
+            {
+                return new Result(ResultStatus.Success, statusCode: 204);
+            }
+
+            return new Result(ResultStatus.Error, message: Messages.Category.NotFound(false), statusCode: 404);
         }
     }
 }

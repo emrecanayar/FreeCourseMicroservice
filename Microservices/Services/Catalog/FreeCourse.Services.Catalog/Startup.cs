@@ -1,5 +1,6 @@
 using FreeCourse.Services.Catalog.Application;
 using FreeCourse.Services.Catalog.Application.Category;
+using FreeCourse.Services.Catalog.Application.Course;
 using FreeCourse.Services.Catalog.Settings.Abstract;
 using FreeCourse.Services.Catalog.Settings.Concrete;
 using Microsoft.AspNetCore.Builder;
@@ -44,6 +45,7 @@ namespace FreeCourse.Services.Catalog
                 return serviceProvider.GetRequiredService<IOptions<DatabaseSettings>>().Value;
             });
             services.AddTransient<ICategoryAppService, CategoryAppService>();
+            services.AddTransient<ICourseAppService, CourseAppService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +59,6 @@ namespace FreeCourse.Services.Catalog
             }
 
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

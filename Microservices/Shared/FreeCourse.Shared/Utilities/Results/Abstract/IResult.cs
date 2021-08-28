@@ -9,6 +9,7 @@ namespace FreeCourse.Shared.Utilities.Results.Abstract
     {
         public ResultStatus ResultStatus { get; }
         public string Message { get; }
+        public int StatusCode { get; }
         public Exception Exception { get; }
     }
 }

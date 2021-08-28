@@ -8,26 +8,30 @@ namespace FreeCourse.Shared.Utilities.Results.Concrete
 {
     public class Result : IResult
     {
-        public Result(ResultStatus resultStatus)
+        public Result(ResultStatus resultStatus, int statusCode)
         {
             ResultStatus = resultStatus;
+            StatusCode = statusCode;
         }
-        public Result(ResultStatus resultStatus, string message)
+        public Result(ResultStatus resultStatus, string message, int statusCode)
         {
             ResultStatus = resultStatus;
             Message = message;
+            StatusCode = statusCode;
         }
 
-        public Result(ResultStatus resultStatus, string message, Exception exception)
+        public Result(ResultStatus resultStatus, string message, int statusCode,Exception exception)
         {
             ResultStatus = resultStatus;
             Message = message;
             Exception = exception;
+            StatusCode = statusCode;
         }
 
 
         public ResultStatus ResultStatus { get; }
         public string Message { get; }
         public Exception Exception { get; }
+        public int StatusCode { get; }
     }
 }
