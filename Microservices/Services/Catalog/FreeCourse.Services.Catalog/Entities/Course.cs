@@ -18,6 +18,8 @@ namespace FreeCourse.Services.Catalog.Entities
         public string Description { get; set; }
         public string UserId { get; set; }
         public string Image { get; set; }
+        [BsonRepresentation(BsonType.Int32)]
+        public int Rating { get; set; }
         [BsonRepresentation(BsonType.DateTime)]
         public DateTime CreatedTime { get; set; }
         public Feature Feature { get; set; }

@@ -3,9 +3,11 @@ using FreeCourse.Services.Catalog.Application.Category;
 using FreeCourse.Services.Catalog.Application.Course;
 using FreeCourse.Services.Catalog.Settings.Abstract;
 using FreeCourse.Services.Catalog.Settings.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,6 +34,11 @@ namespace FreeCourse.Services.Catalog
         public void ConfigureServices(IServiceCollection services)
         {
 
+            //services.AddControllers(options =>
+            //{
+            //    options.Filters.Add(new AuthorizeFilter());
+            //});
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -46,6 +53,25 @@ namespace FreeCourse.Services.Catalog
             });
             services.AddTransient<ICategoryAppService, CategoryAppService>();
             services.AddTransient<ICourseAppService, CourseAppService>();
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            //{
+            //    options.Authority = Configuration["IdentityServerURL"];
+            //    options.Audience = "resource_catalog";
+            //    options.RequireHttpsMetadata = false;
+            //});
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "MyPolicy",
+                  builder =>
+                  {
+                      builder.WithOrigins()
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowAnyOrigin();
+                  });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,8 +84,10 @@ namespace FreeCourse.Services.Catalog
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FreeCourse.Services.Catalog v1"));
             }
 
+            app.UseCors("MyPolicy");
             app.UseRouting();
-            app.UseAuthorization();
+            app.UseAuthentication();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
